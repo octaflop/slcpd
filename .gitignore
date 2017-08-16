@@ -4,5 +4,6 @@
 *.pyc
 *.egg-info/
 *.swp
+Untitled.*
 /data/*
 !/data/README.md
