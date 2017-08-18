@@ -14607,6 +14607,688 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pyproj</span> <span class="k">import</span> <span class="n">Proj</span><span class="p">,</span> <span class="n">transform</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Set up our projections for the <a href="http://www.spatialreference.org/ref/epsg/32043/">Utah</a> and <a href="http://www.spatialreference.org/ref/epsg/4326/">Web / GPS</a> Projections</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># utah central</span>
+<span class="n">utc</span> <span class="o">=</span> <span class="n">Proj</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;epsg:32043&#39;</span><span class="p">,</span> <span class="n">preserve_units</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">gps</span> <span class="o">=</span> <span class="n">Proj</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;epsg:4326&#39;</span><span class="p">,</span> <span class="n">preserve_units</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">convert_to_gps</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;x-coordinate&#39;</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;y-coordinate&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">transform</span><span class="p">(</span><span class="n">utc</span><span class="p">,</span> <span class="n">gps</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2016">2016<a class="anchor-link" href="#2016">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2016</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/slcpd_calls_2016.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2016</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">df_2016</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2016</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">df_2016</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2016</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;x_coordinate&#39;</span><span class="p">:</span> <span class="s1">&#39;x-coordinate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;y_coordiante&#39;</span><span class="p">:</span> <span class="s1">&#39;y-coordinate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;city countil&#39;</span><span class="p">:</span> <span class="s1">&#39;city council&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_2016</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;time cleared&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_2016</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;close type&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">check_columns</span> <span class="o">=</span> <span class="n">df_2016</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">check_columns</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;case&#39;, &#39;date cleared&#39;, &#39;call description&#39;, &#39;location&#39;, &#39;police zone&#39;, &#39;police grid&#39;, &#39;city council&#39;, &#39;x-coordinate&#39;, &#39;y-coordinate&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2016</span><span class="p">[</span><span class="s1">&#39;x_gps_coords&#39;</span><span class="p">],</span> <span class="n">df_2016</span><span class="p">[</span><span class="s1">&#39;y_gps_coords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">df_2016</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_to_gps</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">master_columns</span> <span class="o">=</span> <span class="n">df_2016</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">master_columns</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;case&#39;, &#39;date cleared&#39;, &#39;call description&#39;, &#39;location&#39;, &#39;police zone&#39;, &#39;police grid&#39;, &#39;city council&#39;, &#39;x-coordinate&#39;, &#39;y-coordinate&#39;, &#39;x_gps_coords&#39;, &#39;y_gps_coords&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2015">2015<a class="anchor-link" href="#2015">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2015</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/slcpd_calls_2015.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df_2015</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Index([&#39;Call Number&#39;, &#39;Date Cleared&#39;, &#39;Call Reason&#39;,
+       &#39;Location                                                                                      &#39;,
+       &#39;Close As&#39;, &#39;Police Zone&#39;, &#39;Police Grid&#39;, &#39;City Council&#39;,
+       &#39;X Coordinate&#39;, &#39;Y Coordinate&#39;],
+      dtype=&#39;object&#39;)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2015</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">df_2015</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2015</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">df_2015</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2015</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;call number&#39;</span><span class="p">:</span> <span class="s1">&#39;case&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;close as&#39;</span><span class="p">:</span> <span class="s1">&#39;close type&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;call reason&#39;</span><span class="p">:</span> <span class="s1">&#39;call description&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;x coordinate&#39;</span><span class="p">:</span> <span class="s1">&#39;x-coordinate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;y coordinate&#39;</span><span class="p">:</span> <span class="s1">&#39;y-coordinate&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_2015</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;close type&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">checkset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">check_columns</span><span class="p">)</span>
+<span class="n">df_2015set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df_2015</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">checkset</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">df_2015set</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_2015set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">checkset</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>set()
+set()
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2015</span><span class="p">[</span><span class="s1">&#39;x_gps_coords&#39;</span><span class="p">],</span> <span class="n">df_2015</span><span class="p">[</span><span class="s1">&#39;y_gps_coords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">df_2015</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_to_gps</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2014">2014<a class="anchor-link" href="#2014">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2014</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/slcpd_calls_2014.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">check_columns</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_2014</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;case&#39;, &#39;date cleared&#39;, &#39;call description&#39;, &#39;location&#39;, &#39;police zone&#39;, &#39;police grid&#39;, &#39;city council&#39;, &#39;x-coordinate&#39;, &#39;y-coordinate&#39;]
+[&#39;CALL NUMBER&#39;, &#39;CLEAR DATE&#39;, &#39;CALL REASON&#39;, &#39;LOCATION                                                                                      &#39;, &#39;CLEARED DESCRIPTION&#39;, &#39;POLICE ZONE&#39;, &#39;POLICE GRID&#39;, &#39;COUNCIL&#39;, &#39;X COORDINATE&#39;, &#39;Y COORDINATE&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2014</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">df_2014</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2014</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">df_2014</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2014</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;call number&#39;</span><span class="p">:</span> <span class="s1">&#39;case&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;close as&#39;</span><span class="p">:</span> <span class="s1">&#39;close type&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;clear date&#39;</span><span class="p">:</span> <span class="s1">&#39;date cleared&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;call reason&#39;</span><span class="p">:</span> <span class="s1">&#39;call description&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;council&#39;</span><span class="p">:</span> <span class="s1">&#39;city council&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;x coordinate&#39;</span><span class="p">:</span> <span class="s1">&#39;x-coordinate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;y coordinate&#39;</span><span class="p">:</span> <span class="s1">&#39;y-coordinate&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_2014</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;cleared description&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">checkset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">check_columns</span><span class="p">)</span>
+<span class="n">df_2014set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df_2014</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">checkset</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">df_2014set</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_2014set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">checkset</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>set()
+set()
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2014</span><span class="p">[</span><span class="s1">&#39;x_gps_coords&#39;</span><span class="p">],</span> <span class="n">df_2014</span><span class="p">[</span><span class="s1">&#39;y_gps_coords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">df_2014</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_to_gps</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2013">2013<a class="anchor-link" href="#2013">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2013</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/slcpd_calls_2013.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2013</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">df_2013</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2013</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">df_2013</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df_2013</span><span class="p">[</span><span class="s1">&#39;time cleared&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">df_2013</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;clear date&#39;</span><span class="p">:</span> <span class="s1">&#39;date cleared&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;call number&#39;</span><span class="p">:</span> <span class="s1">&#39;case&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;close description&#39;</span><span class="p">:</span> <span class="s1">&#39;close type&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;call reason&#39;</span><span class="p">:</span> <span class="s1">&#39;call description&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;council&#39;</span><span class="p">:</span> <span class="s1">&#39;city council&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;x coordinate&#39;</span><span class="p">:</span> <span class="s1">&#39;x-coordinate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;y coordinate&#39;</span><span class="p">:</span> <span class="s1">&#39;y-coordinate&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_2013</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;time cleared&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_2013</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;close type&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">checkset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">check_columns</span><span class="p">)</span>
+<span class="n">df_2013set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df_2013</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">checkset</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">df_2013set</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_2013set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">checkset</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>set()
+set()
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[58]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_2013</span><span class="p">[</span><span class="s1">&#39;x_gps_coords&#39;</span><span class="p">],</span> <span class="n">df_2013</span><span class="p">[</span><span class="s1">&#39;y_gps_coords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">df_2013</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_to_gps</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_2016</span><span class="p">,</span> <span class="n">df_2015</span><span class="p">,</span> <span class="n">df_2014</span><span class="p">,</span> <span class="n">df_2013</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[60]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;case&#39;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[61]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>case</th>
+      <th>date cleared</th>
+      <th>call description</th>
+      <th>location</th>
+      <th>police zone</th>
+      <th>police grid</th>
+      <th>city council</th>
+      <th>x-coordinate</th>
+      <th>y-coordinate</th>
+      <th>x_gps_coords</th>
+      <th>y_gps_coords</th>
+    </tr>
+    <tr>
+      <th>case</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>SL2013205584</th>
+      <td>SL2013205584</td>
+      <td>01/01/2014 03:56:54 AM</td>
+      <td>TRAFFIC STOP</td>
+      <td>5XX S MAIN ST                                 ...</td>
+      <td>Z3</td>
+      <td>135</td>
+      <td>4</td>
+      <td>1891835.0</td>
+      <td>883395.0</td>
+      <td>-111.891179</td>
+      <td>40.757904</td>
+    </tr>
+    <tr>
+      <th>SL2013205578</th>
+      <td>SL2013205578</td>
+      <td>01/01/2014 06:03:21 AM</td>
+      <td>THEFT FROM VEHICLE INVESTIGATION</td>
+      <td>2XX W SOUTH TEMPLE ST                         ...</td>
+      <td>Z3</td>
+      <td>132</td>
+      <td>3</td>
+      <td>1890213.0</td>
+      <td>887596.0</td>
+      <td>-111.897101</td>
+      <td>40.769415</td>
+    </tr>
+    <tr>
+      <th>SL2013205592</th>
+      <td>SL2013205592</td>
+      <td>01/01/2014 06:07:16 AM</td>
+      <td>TRAFFIC ACCIDENT - NO INJURIES</td>
+      <td>5XX S WEST TEMPLE ST                          ...</td>
+      <td>Z3</td>
+      <td>135</td>
+      <td>4</td>
+      <td>1891043.0</td>
+      <td>883527.0</td>
+      <td>-111.894040</td>
+      <td>40.758257</td>
+    </tr>
+    <tr>
+      <th>SL2013205280</th>
+      <td>SL2013205280</td>
+      <td>12/31/2013 03:53:33 PM</td>
+      <td>THEFT/LARCENY SUSPECT DETAINED</td>
+      <td>3XX W HOPE AVE                                ...</td>
+      <td>Z5</td>
+      <td>152</td>
+      <td>5</td>
+      <td>1889027.0</td>
+      <td>877008.0</td>
+      <td>-111.901211</td>
+      <td>40.740340</td>
+    </tr>
+    <tr>
+      <th>SL2013205165</th>
+      <td>SL2013205165</td>
+      <td>12/31/2013 08:04:09 AM</td>
+      <td>THEFT / INFORMATION</td>
+      <td>35XX W CALIFORNIA AVE                         ...</td>
+      <td>Z2</td>
+      <td>124</td>
+      <td>2</td>
+      <td>1868708.0</td>
+      <td>877149.0</td>
+      <td>-111.974535</td>
+      <td>40.740454</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">

@@ -9,6 +9,10 @@ conda env create -f ./environment.yml
 source activate slcpd
 ```
 
+# Load datasets
+
+`python src/load_crime_data.py load_crime_data`
+
 ## Contribute
 
 If you add new packages to the environment, save them with:
