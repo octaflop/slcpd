@@ -213,6 +213,14 @@ df.index = df['case']
 df.tail()
 
 
+# # Export
+
+# In[ ]:
+
+
+df.to_csv('../data/SLC_Police_Calls_2013__2016_cleaned_geocoded.csv')
+
+
 # In[ ]:
 
 
