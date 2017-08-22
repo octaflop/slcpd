@@ -94,6 +94,11 @@ datasets = (
         'url': 'https://opendata.utah.gov/api/views/icir-dj48/rows.csv?accessType=DOWNLOAD'
     },
     {
+        'year': '2015',
+        'name': 'cases',
+        'url': 'https://opendata.utah.gov/api/views/muuw-wae2/rows.csv?accessType=DOWNLOAD'
+    },
+    {
         'year': '2016',
         'name': 'calls',
         'url': 'https://opendata.utah.gov/api/views/hmtz-uuer/rows.csv?accessType=DOWNLOAD'
